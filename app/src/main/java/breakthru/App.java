@@ -17,9 +17,9 @@ public class App {
         initBoard();
         printBoard(board);
         //valid move
-        Move.moveShip(board.getCell(1,3), 4,3);
+        //Move.moveShip(board.getCell(1,3), 4,3);
         //invalid move
-        //Move.moveShip(board.getCell(1,3), 5,3);
+        Move.moveShip(board.getCell(1,3), 2,4);
         printBoard(board);
     }
 
