@@ -18,8 +18,10 @@ public class Cell{
     public int getColumn(){
         return this.column;
     }
-
     public Ship getStatus(){
         return this.status;
+    }
+    public void updateStatus(Ship status){
+        this.status = status;
     }
 }

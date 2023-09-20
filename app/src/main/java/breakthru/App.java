@@ -7,76 +7,76 @@ import java.util.Arrays;
 public class App {
 
     // This is just a common prefix, in the future we can build multiple prefixes
-    // or a function in which the players can build up their own fleet location. 
-    private int[][] silverFleetLocation = {{1,3},{1,4},{1,5},{1,6},{1,7},{3,1},{4,1},{5,1},{6,1},{7,1},{9,3},{9,4},{9,5},{9,6},{9,7},{3,9},{4,9},{5,9},{6,9},{7,9}};
-    private int[][] goldFleetLocation = {{3,5},{4,4},{4,6},{5,3},{5,7},{6,4},{6,6},{7,5}};
-    private int[][] flagshipLocation = {{5,5}};
-    private Fleet silverFleet;
-    private Fleet goldFleet;
-    public Board board;
+    // or a function in which the players can build up their own fleet location.
+    private static final int[][] silverFleetLocation = {{1,3},{1,4},{1,5},{1,6},{1,7},{3,1},{4,1},{5,1},{6,1},{7,1},{9,3},{9,4},{9,5},{9,6},{9,7},{3,9},{4,9},{5,9},{6,9},{7,9}};
+    private static final int[][] goldFleetLocation = {{3,5},{4,4},{4,6},{5,3},{5,7},{6,4},{6,6},{7,5}};
+    private static final int[][] flagshipLocation = {{5,5}};
+    public static Board board;
 
     public static void main(String[] args) {
-        App app = new App();
-        app.board = app.initBoard(app.board);
-        app.printBoard(app.board);
+        initBoard();
+        printBoard(board);
+        //valid move
+        Move.moveShip(board.getCell(1,3), 4,3);
+        //invalid move
+        //Move.moveShip(board.getCell(1,3), 5,3);
+        printBoard(board);
     }
 
     /**
      * method that initiates the board
      * it iterates through each grid cell
-     * depending on the fleetlocations it populates ships
+     * depending on the fleet locations it populates ships
      */
-    public Board initBoard(Board board){
+    public static void initBoard(){
         board = new Board(11, 11);
         for(int row = 0; row < board.getHeight(); row++){
             for(int column = 0; column < board.getWidth(); column++){
 
                 int[] temp_cell = {row, column};
 
-                silverFleet = new Fleet(9);
-                goldFleet = new Fleet(20);
+                Fleet silverFleet = new Fleet(9);
+                Fleet goldFleet = new Fleet(20);
                 Cell cell;
 
-                if(Arrays.stream(silverFleetLocation).anyMatch(tcell -> Arrays.equals(tcell, temp_cell))){
-                    Ship ship = new Ship("Ship", silverFleet);
+                if(Arrays.stream(silverFleetLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
+                    Ship ship = new Ship("SShip", silverFleet);
                     cell = new Cell(row, column, ship);
-                }else if(Arrays.stream(goldFleetLocation).anyMatch(tcell -> Arrays.equals(tcell, temp_cell))){
-                    Ship ship = new Ship("Ship", goldFleet);
+                }else if(Arrays.stream(goldFleetLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
+                    Ship ship = new Ship("GShip", goldFleet);
                     cell = new Cell(row, column, ship);
-                }else if(Arrays.stream(flagshipLocation).anyMatch(tcell -> Arrays.equals(tcell, temp_cell))){
-                    Ship ship = new Ship("Flagship", goldFleet);
+                }else if(Arrays.stream(flagshipLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
+                    Ship ship = new Ship("FShip", goldFleet);
                     cell = new Cell(row, column, ship);
                 }else{
                     cell = new Cell(row, column, null);
                 }
-                
+
                 board.addCell(cell);
             }
         }
-        return board;
     }
 
     /**
      * temporary method to display board
-     * this will eventually be a GUI ofcourse
-    */ 
-    public void printBoard(Board board){
+     * this will eventually be a GUI of course
+     * @param board is the board that need to be printed
+     */
+    public static void printBoard(Board board){
+        System.out.println();
         for(int row = 0; row < board.getHeight(); row++){
             for(int column = 0; column < board.getWidth(); column++){
-                //System.out.print("["+row+column+"]");
-                //System.out.print(board.getCell(row, column).getStatus());
                 if(board.getCell(row, column).getStatus()!= null){
-                    if(board.getCell(row, column).getStatus().getType() == "Ship"){
-                        System.out.print("[  "+board.getCell(row, column).getStatus().getType()+"  ]");
+                    if(board.getCell(row, column).getStatus().getType().equals("SShip") || board.getCell(row, column).getStatus().getType().equals("GShip")){
+                        System.out.print("["+board.getCell(row, column).getStatus().getType()+"]");
                     }else{
                         System.out.print("["+board.getCell(row, column).getStatus().getType()+"]");
                     }
                 }else{
-                    System.out.print("[        ]");
+                    System.out.print("[     ]");
                 }
             }
             System.out.println();
         }
     }
-
 }

@@ -2,27 +2,22 @@ package breakthru;
 
 public class Move {
 
-    private Ship selectedShip;
-    private Cell [] availableCells;
+    /**
+     * method that moves a ship from a to b
+     * it checks board boundaries and availability of the cell
+     * @param currentCell is the current cell
+     * @param newRow is the new row location of the ship
+     * @param newColumn is the new column location of the ship
+     */
+    public static void moveShip(Cell currentCell, int newRow, int newColumn){
+        Cell newCell = App.board.getCell(newRow, newColumn);
 
-    public Move(Ship selectedShip, Cell[] availableCells) {
-        this.selectedShip = selectedShip;
-        this.availableCells = availableCells;
-    }
+        if(newRow >= 0 && newRow < App.board.getHeight() && newColumn >=0 && newColumn < App.board.getWidth()){
 
-    public Ship getSelectedShip() {
-        return selectedShip;
-    }
-
-    public void setSelectedShip(Ship selectedShip) {
-        this.selectedShip = selectedShip;
-    }
-
-    public Cell[] getAvailableCells() {
-        return availableCells;
-    }
-
-    public void setAvailableCells(Cell[] availableCells) {
-        this.availableCells = availableCells;
+            if(App.board.getCell(newRow,newColumn).getStatus() == null){
+                newCell.updateStatus(currentCell.getStatus());
+                currentCell.updateStatus(null);
+            }
+        }
     }
 }
