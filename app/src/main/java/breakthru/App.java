@@ -19,7 +19,7 @@ public class App {
         //valid move
         //Move.moveShip(board.getCell(1,3), 4,3);
         //invalid move
-        Move.moveShip(board.getCell(1,3), 2,4);
+        Move.moveShip(board.getCell(1,3), 4,3);
         printBoard(board);
     }
 
