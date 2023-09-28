@@ -2,7 +2,7 @@ package breakthru;
 
 public class Board {
 
-    private Cell[][] board;
+    private final Cell[][] board;
 
     public Board(int numRows, int numColumns){
         board = new Cell[numRows][numColumns];

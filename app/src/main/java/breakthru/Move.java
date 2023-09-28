@@ -2,26 +2,55 @@ package breakthru;
 
 public class Move {
 
-    /**
-     * method that moves a ship from a to b
-     * it checks board boundaries and availability of the cell
-     * it also checks if a player wants to move diagonally, which is not allowed
-     * @param currentCell is the current cell
-     * @param newCell      is the new cell
-     *
-     */
-    public static void moveShip(Cell currentCell, Cell newCell) {
-        if (newCell.getRow() >= 0 && newCell.getRow() < App.board.getHeight() && newCell.getColumn() >= 0 && newCell.getColumn() < App.board.getWidth()) {
-            if (newCell.getStatus() == null) {
-                if (newCell.getRow() == currentCell.getRow() || newCell.getColumn() == currentCell.getColumn()) {
-                    if (!shipConflict(currentCell, newCell.getRow() , newCell.getColumn())) {
-                        newCell.updateStatus(currentCell.getStatus());
-                        currentCell.updateStatus(null);
-                    }
+    public static void moveShip(Player player, Cell currentCell, Cell newCell) {
+        if (!isValidMove(player, currentCell, newCell)) {
+            return;
+        }
+
+        if (isCorrectFleet(player, currentCell)) {
+            if (isWithinBoardBounds(newCell) && isNewCellFree(newCell)) {
+                if (isMovingInStraightLine(currentCell, newCell) && !shipConflict(currentCell, newCell.getRow(), newCell.getColumn())) {
+                    updateCellsAndPlayer(player, currentCell, newCell);
                 }
-            }else{
+            } else {
                 takeOver(currentCell, newCell);
             }
+        } else {
+            System.out.println("Not your ship, you can't move it.");
+        }
+    }
+
+    private static boolean isValidMove(Player player, Cell currentCell, Cell newCell) {
+        return currentCell != player.getLastShipMoved() && player.getMoveCounter() > 0;
+    }
+
+    private static boolean isCorrectFleet(Player player, Cell currentCell) {
+        return currentCell.getStatus().getType().equals(player.getType());
+    }
+
+    private static boolean isWithinBoardBounds(Cell newCell) {
+        int boardHeight = App.board.getHeight();
+        int boardWidth = App.board.getWidth();
+        return newCell.getRow() >= 0 && newCell.getRow() < boardHeight && newCell.getColumn() >= 0 && newCell.getColumn() < boardWidth;
+    }
+
+    private static boolean isNewCellFree(Cell newCell) {
+        return newCell.getStatus() == null;
+    }
+
+    private static boolean isMovingInStraightLine(Cell currentCell, Cell newCell) {
+        return newCell.getRow() == currentCell.getRow() || newCell.getColumn() == currentCell.getColumn();
+    }
+
+    private static void updateCellsAndPlayer(Player player, Cell currentCell, Cell newCell) {
+        newCell.updateStatus(currentCell.getStatus());
+        currentCell.updateStatus(null);
+        player.setLastShipMoved(newCell);
+
+        if (newCell.getStatus().getType().equals("Flag")) {
+            player.setMoveCounter(0);
+        } else {
+            player.setMoveCounter(player.getMoveCounter() - 1);
         }
     }
 
@@ -86,7 +115,7 @@ public class Move {
         if (!newCell.getStatus().getType().equals(currentCell.getStatus().getType()) && validCapture(currentCell, newCell)) {
             if (newCell.getStatus().getType().equals("FLAGSHIP")) {
 
-                System.out.println("Someone won.");
+                System.out.println("Silver won.");
 
             } else {
                 // newCell.getStatus().getFleet().removeShip(newCell.getStatus());

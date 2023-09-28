@@ -14,17 +14,22 @@ public class App {
     public static Board board;
 
     public static void main(String[] args) {
+        Player player1 = new Player("Player 1", "Silver");
+        Player player2 = new Player("Player 2", "Gold");
         initBoard();
         printBoard(board);
         //valid move
         //Move.moveShip(board.getCell(1,3), 4,3);
         //invalid move
-        Move.moveShip(board.getCell(3,1), board.getCell(0,1));
+        System.out.println(player1.getMoveCounter());
+        Move.moveShip(player2, board.getCell(5,3), board.getCell(4,3));
         printBoard(board);
-        Move.moveShip(board.getCell(0,1), board.getCell(0,0));
+        System.out.println(player2.getMoveCounter());
+        Move.moveShip(player2, board.getCell(5,5), board.getCell(4,5));
         printBoard(board);
-        Move.moveShip(board.getCell(0,0), board.getCell(0,0));
-        printBoard(board);
+        System.out.println(player2.getMoveCounter());
+        //Move.moveShip(player1, board.getCell(0,0), board.getCell(0,0));
+        //printBoard(board);
     }
 
     /**
@@ -87,7 +92,7 @@ public class App {
     // beforehand cell cant be null
     // turnCount must be managed be a function, maybe an attribute from the player class
     public static boolean turn(Player player, Cell currentCell, Cell newCell){
-        Move.moveShip(currentCell, newCell);
+        Move.moveShip(player, currentCell, newCell);
         //check and return game state
         boolean gameState = false;
         return gameState;
