@@ -19,7 +19,11 @@ public class App {
         //valid move
         //Move.moveShip(board.getCell(1,3), 4,3);
         //invalid move
-        Move.moveShip(board.getCell(1,3), 4,3);
+        Move.moveShip(board.getCell(3,1), board.getCell(0,1));
+        printBoard(board);
+        Move.moveShip(board.getCell(0,1), board.getCell(0,0));
+        printBoard(board);
+        Move.moveShip(board.getCell(0,0), board.getCell(0,0));
         printBoard(board);
     }
 
@@ -40,13 +44,13 @@ public class App {
                 Cell cell;
 
                 if(Arrays.stream(silverFleetLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
-                    Ship ship = new Ship("SShip", silverFleet);
+                    Ship ship = new Ship("Silver", silverFleet);
                     cell = new Cell(row, column, ship);
                 }else if(Arrays.stream(goldFleetLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
-                    Ship ship = new Ship("GShip", goldFleet);
+                    Ship ship = new Ship("Gold", goldFleet);
                     cell = new Cell(row, column, ship);
                 }else if(Arrays.stream(flagshipLocation).anyMatch(tCell -> Arrays.equals(tCell, temp_cell))){
-                    Ship ship = new Ship("FShip", goldFleet);
+                    Ship ship = new Ship("Flag", goldFleet);
                     cell = new Cell(row, column, ship);
                 }else{
                     cell = new Cell(row, column, null);
@@ -67,16 +71,25 @@ public class App {
         for(int row = 0; row < board.getHeight(); row++){
             for(int column = 0; column < board.getWidth(); column++){
                 if(board.getCell(row, column).getStatus()!= null){
-                    if(board.getCell(row, column).getStatus().getType().equals("SShip") || board.getCell(row, column).getStatus().getType().equals("GShip")){
+                    if(board.getCell(row, column).getStatus().getType().equals("Silver") || board.getCell(row, column).getStatus().getType().equals("Gold")){
                         System.out.print("["+board.getCell(row, column).getStatus().getType()+"]");
                     }else{
                         System.out.print("["+board.getCell(row, column).getStatus().getType()+"]");
                     }
                 }else{
-                    System.out.print("[     ]");
+                    System.out.print("[      ]");
                 }
             }
             System.out.println();
         }
+    }
+
+    // beforehand cell cant be null
+    // turnCount must be managed be a function, maybe an attribute from the player class
+    public static boolean turn(Player player, Cell currentCell, Cell newCell){
+        Move.moveShip(currentCell, newCell);
+        //check and return game state
+        boolean gameState = false;
+        return gameState;
     }
 }

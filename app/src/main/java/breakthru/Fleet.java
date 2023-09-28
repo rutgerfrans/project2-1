@@ -2,8 +2,8 @@ package breakthru;
 
 public class Fleet {
 
-    private String name;
-    private Ship[] ships;
+    private String type;
+    private final Ship[] ships;
 
     public Fleet(int numShips){
         ships = new Ship[numShips];
@@ -13,8 +13,8 @@ public class Fleet {
 
     }
 
-    public String getName(){
-        return this.name;
+    public String getType(){
+        return this.type;
     }
 
     public Ship[] getShips(){

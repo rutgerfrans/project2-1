@@ -6,26 +6,24 @@ public class Move {
      * method that moves a ship from a to b
      * it checks board boundaries and availability of the cell
      * it also checks if a player wants to move diagonally, which is not allowed
-     * TODO make sure a ship doesnt move through another ship
      * @param currentCell is the current cell
-     * @param newRow      is the new row location of the ship
-     * @param newColumn   is the new column location of the ship
+     * @param newCell      is the new cell
      *
      */
-    public static void moveShip(Cell currentCell, int newRow, int newColumn) {
-        Cell newCell = App.board.getCell(newRow, newColumn);
-        if (newRow >= 0 && newRow < App.board.getHeight() && newColumn >= 0 && newColumn < App.board.getWidth()) {
+    public static void moveShip(Cell currentCell, Cell newCell) {
+        if (newCell.getRow() >= 0 && newCell.getRow() < App.board.getHeight() && newCell.getColumn() >= 0 && newCell.getColumn() < App.board.getWidth()) {
             if (newCell.getStatus() == null) {
-                if (newRow == currentCell.getRow() || newColumn == currentCell.getColumn()) {
-                    if (!shipConflict(currentCell, newRow, newColumn)) {
+                if (newCell.getRow() == currentCell.getRow() || newCell.getColumn() == currentCell.getColumn()) {
+                    if (!shipConflict(currentCell, newCell.getRow() , newCell.getColumn())) {
                         newCell.updateStatus(currentCell.getStatus());
                         currentCell.updateStatus(null);
                     }
                 }
+            }else{
+                takeOver(currentCell, newCell);
             }
         }
     }
-
 
     /**
      * method that checks if a ship moves through another ship
@@ -75,5 +73,46 @@ public class Move {
             }
         }
         return conflict;
+    }
+
+    /**
+     * method that allows a player to capture a ship
+     * it checks if a player is capturing a flagship or a normal ship
+     * @param currentCell is the current cell
+     * @param newCell is the new location of the ship
+     */
+    public static void takeOver(Cell currentCell, Cell newCell) {
+
+        if (!newCell.getStatus().getType().equals(currentCell.getStatus().getType()) && validCapture(currentCell, newCell)) {
+            if (newCell.getStatus().getType().equals("FLAGSHIP")) {
+
+                System.out.println("Someone won.");
+
+            } else {
+                // newCell.getStatus().getFleet().removeShip(newCell.getStatus());
+                System.out.println("we take over.");
+                newCell.updateStatus(currentCell.getStatus());
+                currentCell.updateStatus(null);
+
+            }
+        } else {
+            System.out.println("YOU CAN'T TAKE OVER");
+        }
+    }
+
+    /**
+     * method that checks if a capture move is valid
+     * @param currentCell is the current cell
+     * @param newCell is the new location of the ship
+     * @return returns a false or true statement based on the valid move
+     */
+    public static boolean validCapture(Cell currentCell, Cell newCell){
+        if(newCell.getRow() == (currentCell.getRow() - 1) && newCell.getColumn() == (currentCell.getColumn()-1)){
+            return true;
+        }else if(newCell.getRow() == (currentCell.getRow() - 1) && newCell.getColumn() == (currentCell.getColumn()+1)){
+            return true;
+        }else if(newCell.getRow() == (currentCell.getRow() + 1) && newCell.getColumn() == (currentCell.getColumn()-1)){
+            return true;
+        }else return newCell.getRow() == (currentCell.getRow() + 1) && newCell.getColumn() == (currentCell.getColumn() + 1);
     }
 }
